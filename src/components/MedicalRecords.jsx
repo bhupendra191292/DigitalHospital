@@ -30,44 +30,16 @@ const MedicalRecords = ({ token }) => {
       
       setPatients(res.data.data || []);
       
-      // Mock medical records data
-      setMedicalRecords([
-        {
-          id: 1,
-          patientId: 1,
-          date: '2024-01-15',
-          type: 'consultation',
-          diagnosis: 'Hypertension',
-          treatment: 'Lifestyle modifications and medication',
-          prescription: 'Amlodipine 5mg daily',
-          notes: 'Patient shows improvement with current treatment plan',
-          followUpDate: '2024-02-15'
-        },
-        {
-          id: 2,
-          patientId: 1,
-          date: '2024-01-10',
-          type: 'follow-up',
-          diagnosis: 'Hypertension',
-          treatment: 'Continued medication',
-          prescription: 'Amlodipine 5mg daily',
-          notes: 'Blood pressure readings improved',
-          followUpDate: '2024-01-15'
-        },
-        {
-          id: 3,
-          patientId: 2,
-          date: '2024-01-12',
-          type: 'consultation',
-          diagnosis: 'Type 2 Diabetes',
-          treatment: 'Diet control and medication',
-          prescription: 'Metformin 500mg twice daily',
-          notes: 'Newly diagnosed, requires close monitoring',
-          followUpDate: '2024-01-26'
-        }
-      ]);
+      // Get real medical records from backend
+      const recordsRes = await axios.get('http://localhost:5001/api/visits', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      setMedicalRecords(recordsRes.data.data || []);
     } catch (err) {
       console.error('Failed to load data', err);
+      setPatients([]);
+      setMedicalRecords([]);
     } finally {
       setLoading(false);
     }

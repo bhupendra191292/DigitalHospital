@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import ErrorBoundary from './components/ErrorBoundary';
 import { usePerformance } from './hooks/usePerformance';
+import tenantStylingService from './services/tenantStylingService';
 import './App.css';
 
 // Lazy load components for better performance
@@ -67,6 +68,9 @@ const AppContent = () => {
   // Start monitoring on app load
   React.useEffect(() => {
     performance.startMonitoring();
+    
+    // Initialize tenant styling from storage
+    tenantStylingService.initializeFromStorage();
     
     // Stop monitoring on unmount
     return () => {

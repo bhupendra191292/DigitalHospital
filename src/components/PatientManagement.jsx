@@ -48,17 +48,9 @@ const PatientManagement = ({ token }) => {
       setAppointments(appointmentsRes.data.data || []);
     } catch (err) {
       console.error('Failed to load data', err);
-      // Mock data for demo
-      setPatients([
-        { _id: 1, name: 'John Doe', phone: '1234567890', age: 35, gender: 'Male', lastVisit: '2024-01-15' },
-        { _id: 2, name: 'Jane Smith', phone: '0987654321', age: 28, gender: 'Female', lastVisit: '2024-01-10' },
-        { _id: 3, name: 'Mike Johnson', phone: '5555555555', age: 45, gender: 'Male', lastVisit: '2024-01-12' }
-      ]);
-      setAppointments([
-        { _id: 1, patient: { name: 'John Doe' }, date: '2024-01-20', time: '10:00', type: 'consultation', status: 'confirmed' },
-        { _id: 2, patient: { name: 'Jane Smith' }, date: '2024-01-20', time: '11:00', type: 'follow-up', status: 'pending' },
-        { _id: 3, patient: { name: 'Mike Johnson' }, date: '2024-01-21', time: '09:00', type: 'emergency', status: 'confirmed' }
-      ]);
+      // Set empty arrays instead of mock data
+      setPatients([]);
+      setAppointments([]);
     } finally {
       setLoading(false);
     }

@@ -1,89 +1,93 @@
 // src/services/api.js
-import api from './axiosInstance';
+import axios from 'axios';
+import { getApiBaseUrl } from '../config/environment';
 
-export const loginDoctor = (phone, password) =>
-  api.post('/doctors/login', { phone, password });
+// Create axios instance with base configuration
+const api = axios.create({
+  baseURL: getApiBaseUrl(),
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export const registerPatient = (data) =>
-  api.post('/patients/register', data);
+// Request interceptor to add auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-export const checkPatient = (phone) =>
-  api.post('/patients/check', { phone });
+// Response interceptor for error handling
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token expired or invalid
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
-export const addVisit = (data) =>
-  api.post('/visits', data);
+// API service functions
+export const authAPI = {
+  login: (credentials) => api.post('/doctors/login', credentials),
+  logout: () => api.post('/doctors/logout'),
+  verify: () => api.get('/doctors/verify'),
+};
 
-export const updateVisit = (visitId, data) =>
-  api.patch(`/visits/${visitId}`, data);
+export const patientAPI = {
+  register: (patientData) => api.post('/patients/register', patientData),
+  getAll: (params) => api.get('/patients', { params }),
+  getById: (id) => api.get(`/patients/${id}`),
+  update: (id, data) => api.put(`/patients/${id}`, data),
+  delete: (id) => api.delete(`/patients/${id}`),
+  search: (query) => api.get('/patients/search', { params: { q: query } }),
+};
 
-export const getVisits = (patientId) =>
-  api.get(`/patients/${patientId}/visits`);
+export const appointmentAPI = {
+  create: (appointmentData) => api.post('/appointments', appointmentData),
+  getAll: (params) => api.get('/appointments', { params }),
+  getById: (id) => api.get(`/appointments/${id}`),
+  update: (id, data) => api.put(`/appointments/${id}`, data),
+  delete: (id) => api.delete(`/appointments/${id}`),
+};
 
-export const getDashboardSummary = () =>
-  api.get('/dashboard/summary');
+export const visitAPI = {
+  create: (visitData) => api.post('/visits', visitData),
+  getAll: (params) => api.get('/visits', { params }),
+  getById: (id) => api.get(`/visits/${id}`),
+  update: (id, data) => api.put(`/visits/${id}`, data),
+  delete: (id) => api.delete(`/visits/${id}`),
+};
 
-export const getTrends = () =>
-  api.get('/analytics/trends');
+export const dashboardAPI = {
+  getSummary: () => api.get('/dashboard/summary'),
+  getActivity: () => api.get('/dashboard/activity'),
+};
 
-export const getDoctors = () =>
-  api.get('/doctors');
+export const analyticsAPI = {
+  getOverview: (params) => api.get('/analytics/overview', { params }),
+  getPatientTrends: (params) => api.get('/analytics/patient-trends', { params }),
+  getVisitTrends: (params) => api.get('/analytics/visit-trends', { params }),
+};
 
-export const createDoctor = (data) =>
-  api.post('/doctors', data);
+export const tenantAPI = {
+  register: (tenantData) => api.post('/tenants/register', tenantData),
+  getById: (id) => api.get(`/tenants/${id}`),
+  update: (id, data) => api.put(`/tenants/${id}`, data),
+};
 
-export const promoteDoctor = (id) =>
-  api.patch(`/doctors/${id}/promote`);
-
-export const updateDoctor = (id, data) =>
-  api.patch(`/doctors/${id}`, data);
-
-export const deleteDoctor = (id) =>
-  api.delete(`/doctors/${id}`);
-
-
-export const getPatients = (params) =>
-  api.get('/patients', { params });
-
-export const getPatientById = (id) => api.get(`/patients/${id}`);
-
-// Appointment APIs
-export const getAppointments = (params) =>
-  api.get('/appointments', { params });
-
-export const getAppointmentById = (id) =>
-  api.get(`/appointments/${id}`);
-
-export const createAppointment = (data) =>
-  api.post('/appointments', data);
-
-export const updateAppointment = (id, data) =>
-  api.patch(`/appointments/${id}`, data);
-
-export const deleteAppointment = (id) =>
-  api.delete(`/appointments/${id}`);
-
-export const getPatientAppointments = (patientId) =>
-  api.get(`/appointments/patient/${patientId}`);
-
-export const getTodayAppointments = () =>
-  api.get('/appointments/today');
-
-// Admin APIs
-export const getAdminDashboard = () =>
-  api.get('/admin/dashboard');
-
-export const getAuditLogs = (params) =>
-  api.get('/admin/audit-logs', { params });
-
-// Tenant APIs
-export const registerTenant = (data) =>
-  api.post('/tenants/register', data);
-
-export const getTenantConfig = () =>
-  api.get('/tenants/config');
-
-export const updateTenantConfig = (data) =>
-  api.patch('/tenants/config', data);
-
-export const getTenantStats = () =>
-  api.get('/tenants/stats');
+export default api;

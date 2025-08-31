@@ -8,6 +8,11 @@ const TenantRegistration = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  // Set page title
+  React.useEffect(() => {
+    document.title = 'Register Your Healthcare Facility - Digital Hospital';
+  }, []);
   const [formData, setFormData] = useState({
     name: '',
     type: 'hospital',
@@ -75,7 +80,7 @@ const TenantRegistration = () => {
       if (response.data.success) {
         // Store tenant info and redirect to login
         localStorage.setItem('tenantInfo', JSON.stringify(response.data.data.tenant));
-        alert('Hospital/Clinic registered successfully! You can now login.');
+        alert(`${formData.name} registered successfully! You can now login with your admin credentials.`);
         navigate('/login');
       }
     } catch (err) {
@@ -107,6 +112,9 @@ const TenantRegistration = () => {
         <div className="registration-header">
           <h1>🏥 Register Your Healthcare Facility</h1>
           <p>Join thousands of healthcare providers using our comprehensive management system</p>
+          <div className="header-highlight">
+            <span>✨ Create your own branded healthcare management system</span>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="registration-form">
@@ -114,19 +122,21 @@ const TenantRegistration = () => {
           <div className="form-section">
             <h3>🏥 Healthcare Facility Information</h3>
             
+            <div className="form-group facility-name-group">
+              <label>🏥 Hospital/Clinic Name *</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="Enter your hospital or clinic name"
+                required
+                className="facility-name-input"
+              />
+              <small>This will be displayed throughout your system</small>
+            </div>
+            
             <div className="form-row">
-              <div className="form-group">
-                <label>Facility Name *</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter facility name"
-                  required
-                />
-              </div>
-              
               <div className="form-group">
                 <label>Facility Type *</label>
                 <select

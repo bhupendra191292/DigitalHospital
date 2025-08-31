@@ -1,0 +1,226 @@
+.dynamic-header {
+  background: var(--surface-color, #f8fafc);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  padding: var(--spacing-lg, 1.5rem);
+  margin-bottom: var(--spacing-xl, 2rem);
+  border-radius: 0 0 var(--border-radius-lg, 0.5rem) var(--border-radius-lg, 0.5rem);
+  box-shadow: var(--shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
+}
+
+.hospital-branding {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 1rem);
+  margin-bottom: var(--spacing-lg, 1.5rem);
+  padding-bottom: var(--spacing-md, 1rem);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+.hospital-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--border-radius-lg, 0.5rem);
+  overflow: hidden;
+  background: var(--primary-color, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+}
+
+.logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.logo-placeholder {
+  font-size: var(--font-size-2xl, 1.5rem);
+  color: white;
+  font-weight: var(--font-weight-bold, 700);
+}
+
+.hospital-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 0.25rem);
+}
+
+.hospital-name {
+  margin: 0;
+  font-size: var(--font-size-2xl, 1.5rem);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--text-color, #1f2937);
+  line-height: var(--line-height, 1.5);
+}
+
+.hospital-type {
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--text-secondary-color, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: var(--font-weight-medium, 500);
+  background: var(--primary-color, #2563eb);
+  color: white;
+  padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
+  border-radius: var(--border-radius-full, 9999px);
+  display: inline-block;
+  width: fit-content;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-lg, 1.5rem);
+}
+
+.header-text {
+  flex: 1;
+}
+
+.header-title {
+  margin: 0 0 var(--spacing-sm, 0.5rem) 0;
+  font-size: var(--font-size-3xl, 1.875rem);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--text-color, #1f2937);
+  line-height: var(--line-height, 1.5);
+}
+
+.header-subtitle {
+  margin: 0;
+  font-size: var(--font-size-lg, 1.125rem);
+  color: var(--text-secondary-color, #6b7280);
+  line-height: var(--line-height, 1.5);
+  font-weight: var(--font-weight-normal, 400);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 1rem);
+}
+
+.tenant-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+.status-indicator {
+  padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
+  border-radius: var(--border-radius-full, 9999px);
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: var(--font-weight-semibold, 600);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-indicator.active {
+  background: var(--success-color, #10b981);
+  color: white;
+}
+
+.status-indicator.pending {
+  background: var(--warning-color, #f59e0b);
+  color: white;
+}
+
+.status-indicator.suspended {
+  background: var(--error-color, #ef4444);
+  color: white;
+}
+
+.status-indicator.inactive {
+  background: var(--text-secondary-color, #6b7280);
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dynamic-header {
+    padding: var(--spacing-md, 1rem);
+    margin-bottom: var(--spacing-lg, 1.5rem);
+  }
+  
+  .hospital-branding {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-sm, 0.5rem);
+  }
+  
+  .hospital-logo {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .hospital-name {
+    font-size: var(--font-size-xl, 1.25rem);
+    text-align: center;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: var(--spacing-md, 1rem);
+  }
+  
+  .header-title {
+    font-size: var(--font-size-2xl, 1.5rem);
+    text-align: center;
+  }
+  
+  .header-subtitle {
+    text-align: center;
+  }
+  
+  .header-actions {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* Animation for logo */
+.hospital-logo {
+  transition: all 0.3s ease;
+}
+
+.hospital-logo:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+}
+
+/* Custom CSS Variables Support */
+:root {
+  --border-color: #e2e8f0;
+  --primary-color: #2563eb;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --text-color: #1f2937;
+  --text-secondary-color: #6b7280;
+  --surface-color: #f8fafc;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --line-height: 1.5;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.375rem;
+  --border-radius-lg: 0.5rem;
+  --border-radius-full: 9999px;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}

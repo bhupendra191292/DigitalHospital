@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';
-import { setDoctor, setToken, setRole } from '../store/slices/authSlice';
+import { setDoctor, setToken, setRole, setTenant } from '../store/slices/authSlice';
 import { loginDoctor } from '../services/api';
+import tenantStylingService from '../services/tenantStylingService';
 import PhoneInput from '../components/PhoneInput';
 import LoadingSpinner from '../components/LoadingSpinner';
 import './Login.css';
@@ -34,6 +35,15 @@ const Login = () => {
       dispatch(setDoctor(res.data.doctor));
       dispatch(setToken(res.data.token));
       dispatch(setRole(res.data.doctor.role));
+      
+      // Set tenant data if available
+      if (res.data.tenant) {
+        dispatch(setTenant(res.data.tenant));
+        // Apply tenant styling
+        tenantStylingService.applyTenantStyling(res.data.tenant);
+        tenantStylingService.updateTenantInStorage(res.data.tenant);
+      }
+      
       console.log('Redux state updated');
 
       // Add success animation

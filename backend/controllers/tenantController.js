@@ -22,9 +22,23 @@ const registerTenant = async (req, res) => {
       subscriptionPlan = 'free'
     } = req.body;
 
+    // Validate required fields
+    if (!name || !email || !phone || !adminName || !adminPhone || !adminPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: name, email, phone, adminName, adminPhone, adminPassword'
+      });
+    }
+
+    // Generate slug from name
+    const slug = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+
     // Check if tenant already exists
     const existingTenant = await Tenant.findOne({
-      $or: [{ email }, { slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-') }]
+      $or: [{ email }, { slug }]
     });
 
     if (existingTenant) {
@@ -37,10 +51,11 @@ const registerTenant = async (req, res) => {
     // Create tenant
     const tenant = new Tenant({
       name,
+      slug,
       type,
       email,
       phone,
-      address,
+      address: typeof address === 'string' ? { street: address } : address,
       businessLicense,
       taxId,
       establishedDate,
@@ -103,7 +118,8 @@ const registerTenant = async (req, res) => {
     console.error('Tenant registration error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to register hospital/clinic'
+      message: 'Failed to register hospital/clinic',
+      error: error.message
     });
   }
 };
@@ -142,7 +158,7 @@ const updateTenantConfig = async (req, res) => {
     // Only allow certain fields to be updated
     const allowedUpdates = [
       'name', 'logo', 'favicon', 'primaryColor', 'secondaryColor', 
-      'customCSS', 'settings', 'address', 'phone'
+      'customCSS', 'settings', 'address', 'phone', 'uiCustomization'
     ];
 
     const filteredUpdates = {};

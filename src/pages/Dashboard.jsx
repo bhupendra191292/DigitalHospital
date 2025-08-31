@@ -16,6 +16,7 @@ import MedicalRecords from "../components/MedicalRecords";
 import PatientCommunication from "../components/PatientCommunication";
 import Reports from "../components/Reports";
 import AdminDashboard from "../components/AdminDashboard";
+import UICustomizer from "../components/UICustomizer";
 
 const Dashboard = () => {
   const token = Cookies.get("token");
@@ -27,6 +28,7 @@ const Dashboard = () => {
   const [recentActivity, setRecentActivity] = useState([]);
   const [loadingActivity, setLoadingActivity] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [uiCustomizerOpen, setUiCustomizerOpen] = useState(false);
   const searchRef = useRef();
 
   useEffect(() => {
@@ -37,49 +39,17 @@ const Dashboard = () => {
   const loadRecentActivity = async () => {
     try {
       setLoadingActivity(true);
-      // Simulate API call for recent activity
-      const mockActivity = [
-        {
-          id: 1,
-          type: "patient_registered",
-          title: "New Patient Registered",
-          description: "John Doe was registered to the system",
-          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-          icon: "👤",
-          color: "primary"
-        },
-        {
-          id: 2,
-          type: "appointment_scheduled",
-          title: "Appointment Scheduled",
-          description: "Appointment scheduled for Sarah Smith",
-          timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-          icon: "📅",
-          color: "success"
-        },
-        {
-          id: 3,
-          type: "visit_completed",
-          title: "Visit Completed",
-          description: "Follow-up visit completed for Mike Johnson",
-          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-          icon: "✅",
-          color: "success"
-        },
-        {
-          id: 4,
-          type: "prescription_updated",
-          title: "Prescription Updated",
-          description: "Medication updated for Lisa Brown",
-          timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
-          icon: "💊",
-          color: "warning"
-        }
-      ];
       
-      setRecentActivity(mockActivity);
+      // Get real recent activity from backend
+      const res = await axios.get("http://localhost:5001/api/dashboard/activity", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      setRecentActivity(res.data.data || []);
     } catch (error) {
       console.error("Error loading recent activity:", error);
+      // Fallback to empty array instead of mock data
+      setRecentActivity([]);
     } finally {
       setLoadingActivity(false);
     }
@@ -355,6 +325,13 @@ const Dashboard = () => {
               </h1>
             </div>
             <div className="header-right">
+              <button
+                onClick={() => setUiCustomizerOpen(true)}
+                className="btn btn-secondary btn-sm"
+                title="Customize UI"
+              >
+                🎨 Customize
+              </button>
               <div className="badge badge-primary">
                 {role === 'admin' ? 'Administrator' : 'Doctor'}
               </div>
@@ -492,6 +469,12 @@ const Dashboard = () => {
           )}
         </div>
       </main>
+      
+      {/* UI Customizer */}
+      <UICustomizer 
+        isOpen={uiCustomizerOpen}
+        onClose={() => setUiCustomizerOpen(false)}
+      />
     </div>
   );
 };

@@ -5,24 +5,19 @@ const tenantSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true,
-    maxlength: 100
+    trim: true
   },
   slug: {
     type: String,
-    required: true,
     unique: true,
     lowercase: true,
-    trim: true,
-    match: /^[a-z0-9-]+$/
+    trim: true
   },
   type: {
     type: String,
-    enum: ['hospital', 'clinic', 'medical_center', 'pharmacy', 'laboratory'],
+    enum: ['hospital', 'clinic', 'medical-center'],
     default: 'hospital'
   },
-  
-  // Contact Information
   email: {
     type: String,
     required: true,
@@ -39,37 +34,146 @@ const tenantSchema = new mongoose.Schema({
     street: String,
     city: String,
     state: String,
-    country: String,
-    zipCode: String
+    zipCode: String,
+    country: String
   },
   
-  // Branding & Customization
+  // Business Information
+  businessLicense: String,
+  taxId: String,
+  establishedDate: Date,
+  
+  // Branding
   logo: {
     url: String,
     alt: String
   },
   favicon: {
-    url: String
+    url: String,
+    alt: String
   },
+  
+  // UI Customization
   primaryColor: {
     type: String,
-    default: '#2563eb',
-    match: /^#[0-9A-Fa-f]{6}$/
+    default: '#2563eb'
   },
   secondaryColor: {
     type: String,
-    default: '#059669',
-    match: /^#[0-9A-Fa-f]{6}$/
+    default: '#059669'
   },
   customCSS: String,
   
-  // Business Information
-  businessLicense: String,
-  taxId: String,
-  registrationNumber: String,
-  establishedDate: Date,
+  // Advanced UI Customization
+  uiCustomization: {
+    // Color Scheme
+    colors: {
+      primary: { type: String, default: '#2563eb' },
+      secondary: { type: String, default: '#059669' },
+      accent: { type: String, default: '#f59e0b' },
+      success: { type: String, default: '#10b981' },
+      warning: { type: String, default: '#f59e0b' },
+      error: { type: String, default: '#ef4444' },
+      background: { type: String, default: '#ffffff' },
+      surface: { type: String, default: '#f8fafc' },
+      text: { type: String, default: '#1f2937' },
+      textSecondary: { type: String, default: '#6b7280' }
+    },
+    // Typography
+    typography: {
+      fontFamily: { type: String, default: 'Inter, system-ui, sans-serif' },
+      lineHeight: { type: String, default: '1.5' },
+      fontSize: {
+        xs: { type: String, default: '0.75rem' },
+        sm: { type: String, default: '0.875rem' },
+        base: { type: String, default: '1rem' },
+        lg: { type: String, default: '1.125rem' },
+        xl: { type: String, default: '1.25rem' },
+        '2xl': { type: String, default: '1.5rem' },
+        '3xl': { type: String, default: '1.875rem' },
+        '4xl': { type: String, default: '2.25rem' }
+      }
+    },
+    // Spacing
+    spacing: {
+      xs: { type: String, default: '0.25rem' },
+      sm: { type: String, default: '0.5rem' },
+      md: { type: String, default: '1rem' },
+      lg: { type: String, default: '1.5rem' },
+      xl: { type: String, default: '2rem' },
+      '2xl': { type: String, default: '3rem' }
+    },
+    // Border Radius
+    borderRadius: {
+      sm: { type: String, default: '0.25rem' },
+      md: { type: String, default: '0.375rem' },
+      lg: { type: String, default: '0.5rem' },
+      xl: { type: String, default: '0.75rem' },
+      full: { type: String, default: '9999px' }
+    },
+    // Shadows
+    shadows: {
+      sm: { type: String, default: '0 1px 2px 0 rgb(0 0 0 / 0.05)' },
+      md: { type: String, default: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)' },
+      lg: { type: String, default: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)' },
+      xl: { type: String, default: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)' }
+    },
+    // Layouts
+    layouts: {
+      dashboard: {
+        sidebar: { type: String, default: 'left' },
+        header: { type: String, default: 'top' },
+        grid: { type: String, default: 'auto-fit' }
+      },
+      forms: {
+        layout: { type: String, default: 'vertical' },
+        labelPosition: { type: String, default: 'top' }
+      }
+    },
+    // Components
+    components: {
+      buttons: {
+        style: { type: String, default: 'filled' },
+        size: { type: String, default: 'md' },
+        rounded: { type: Boolean, default: false }
+      },
+      cards: {
+        style: { type: String, default: 'elevated' },
+        padding: { type: String, default: 'lg' },
+        shadow: { type: String, default: 'md' }
+      },
+      inputs: {
+        style: { type: String, default: 'outlined' },
+        size: { type: String, default: 'md' },
+        focusStyle: { type: String, default: 'ring' }
+      }
+    }
+  },
   
-  // Features & Settings
+  // Settings
+  settings: {
+    workingHours: {
+      monday: { closed: { type: Boolean, default: false } },
+      tuesday: { closed: { type: Boolean, default: false } },
+      wednesday: { closed: { type: Boolean, default: false } },
+      thursday: { closed: { type: Boolean, default: false } },
+      friday: { closed: { type: Boolean, default: false } },
+      saturday: { closed: { type: Boolean, default: true } },
+      sunday: { closed: { type: Boolean, default: true } }
+    },
+    timezone: { type: String, default: 'UTC' },
+    dateFormat: { type: String, default: 'MM/DD/YYYY' },
+    timeFormat: { type: String, default: '12h' },
+    language: { type: String, default: 'en' },
+    currency: { type: String, default: 'USD' },
+    appointmentDuration: { type: Number, default: 30 },
+    autoConfirmAppointments: { type: Boolean, default: false },
+    sendSMSNotifications: { type: Boolean, default: false },
+    sendEmailNotifications: { type: Boolean, default: true },
+    requirePatientConsent: { type: Boolean, default: true }
+  },
+  
+  // Features
   features: {
     appointments: { type: Boolean, default: true },
     patientManagement: { type: Boolean, default: true },
@@ -84,7 +188,7 @@ const tenantSchema = new mongoose.Schema({
     auditLogs: { type: Boolean, default: true }
   },
   
-  // Subscription & Billing
+  // Subscription
   subscription: {
     plan: {
       type: String,
@@ -93,113 +197,45 @@ const tenantSchema = new mongoose.Schema({
     },
     status: {
       type: String,
-      enum: ['active', 'trial', 'expired', 'cancelled'],
+      enum: ['trial', 'active', 'suspended', 'cancelled'],
       default: 'trial'
     },
     startDate: { type: Date, default: Date.now },
-    endDate: Date,
+    endDate: { type: Date },
     maxUsers: { type: Number, default: 5 },
-    maxPatients: { type: Number, default: 1000 },
-    maxStorage: { type: Number, default: 1024 }, // MB
-    customDomain: String
-  },
-  
-  // System Settings
-  settings: {
-    timezone: { type: String, default: 'UTC' },
-    dateFormat: { type: String, default: 'MM/DD/YYYY' },
-    timeFormat: { type: String, default: '12h' },
-    language: { type: String, default: 'en' },
-    currency: { type: String, default: 'USD' },
-    workingHours: {
-      monday: { start: String, end: String, closed: { type: Boolean, default: false } },
-      tuesday: { start: String, end: String, closed: { type: Boolean, default: false } },
-      wednesday: { start: String, end: String, closed: { type: Boolean, default: false } },
-      thursday: { start: String, end: String, closed: { type: Boolean, default: false } },
-      friday: { start: String, end: String, closed: { type: Boolean, default: false } },
-      saturday: { start: String, end: String, closed: { type: Boolean, default: true } },
-      sunday: { start: String, end: String, closed: { type: Boolean, default: true } }
-    },
-    appointmentDuration: { type: Number, default: 30 }, // minutes
-    autoConfirmAppointments: { type: Boolean, default: false },
-    sendSMSNotifications: { type: Boolean, default: false },
-    sendEmailNotifications: { type: Boolean, default: true },
-    requirePatientConsent: { type: Boolean, default: true }
+    maxPatients: { type: Number, default: 1000 }
   },
   
   // Status
   status: {
     type: String,
-    enum: ['active', 'inactive', 'suspended', 'pending'],
-    default: 'pending'
+    enum: ['active', 'inactive', 'suspended'],
+    default: 'active'
   },
   
-  // Metadata
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Doctor'
-  },
-  notes: String
+  // Timestamps
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 }, {
   timestamps: true
 });
 
-// Indexes for efficient querying
-tenantSchema.index({ slug: 1 });
-tenantSchema.index({ email: 1 });
-tenantSchema.index({ status: 1 });
-tenantSchema.index({ 'subscription.status': 1 });
-tenantSchema.index({ createdAt: -1 });
-
-// Virtual for full address
-tenantSchema.virtual('fullAddress').get(function() {
-  const addr = this.address;
-  if (!addr) return '';
-  
-  const parts = [addr.street, addr.city, addr.state, addr.zipCode, addr.country];
-  return parts.filter(Boolean).join(', ');
-});
-
-// Virtual for subscription status
-tenantSchema.virtual('isActive').get(function() {
-  return this.status === 'active' && 
-         ['active', 'trial'].includes(this.subscription.status) &&
-         (!this.subscription.endDate || this.subscription.endDate > new Date());
-});
-
-// Method to get tenant configuration
-tenantSchema.methods.getConfig = function() {
-  return {
-    id: this._id,
-    name: this.name,
-    slug: this.slug,
-    type: this.type,
-    logo: this.logo,
-    favicon: this.favicon,
-    primaryColor: this.primaryColor,
-    secondaryColor: this.secondaryColor,
-    customCSS: this.customCSS,
-    features: this.features,
-    settings: this.settings,
-    subscription: {
-      plan: this.subscription.plan,
-      status: this.subscription.status,
-      maxUsers: this.subscription.maxUsers,
-      maxPatients: this.subscription.maxPatients,
-      customDomain: this.subscription.customDomain
-    }
-  };
-};
-
-// Pre-save middleware to generate slug if not provided
+// Generate slug from name before saving
 tenantSchema.pre('save', function(next) {
-  if (!this.slug) {
+  if (!this.slug && this.name) {
     this.slug = this.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
+  } else if (!this.slug) {
+    // Generate a fallback slug if no name is provided
+    this.slug = 'tenant-' + Date.now();
   }
   next();
 });
+
+// Create indexes (only once to avoid duplicates)
+tenantSchema.index({ slug: 1 }, { unique: true });
+tenantSchema.index({ email: 1 }, { unique: true });
 
 module.exports = mongoose.model('Tenant', tenantSchema);

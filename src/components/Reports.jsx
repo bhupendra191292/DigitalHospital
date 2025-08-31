@@ -16,47 +16,12 @@ const Reports = ({ token }) => {
     try {
       setLoading(true);
       
-      // Mock reports data
-      setReports([
-        {
-          id: 1,
-          type: 'patient_summary',
-          title: 'Patient Summary Report',
-          description: 'Comprehensive overview of patient demographics and trends',
-          lastGenerated: '2024-01-19T10:30:00Z',
-          status: 'completed',
-          format: 'pdf'
-        },
-        {
-          id: 2,
-          type: 'financial_summary',
-          title: 'Financial Summary Report',
-          description: 'Revenue analysis and financial performance metrics',
-          lastGenerated: '2024-01-18T15:45:00Z',
-          status: 'completed',
-          format: 'excel'
-        },
-        {
-          id: 3,
-          type: 'appointment_analysis',
-          title: 'Appointment Analysis Report',
-          description: 'Appointment trends and scheduling efficiency',
-          lastGenerated: '2024-01-17T14:20:00Z',
-          status: 'completed',
-          format: 'pdf'
-        },
-        {
-          id: 4,
-          type: 'medical_conditions',
-          title: 'Medical Conditions Report',
-          description: 'Analysis of common conditions and treatments',
-          lastGenerated: '2024-01-16T09:15:00Z',
-          status: 'completed',
-          format: 'pdf'
-        }
-      ]);
+      // Get real reports data from backend (when implemented)
+      // For now, set empty array until reports API is ready
+      setReports([]);
     } catch (err) {
       console.error('Failed to load reports', err);
+      setReports([]);
     } finally {
       setLoading(false);
     }

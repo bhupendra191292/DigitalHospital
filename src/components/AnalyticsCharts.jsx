@@ -44,31 +44,13 @@ const AnalyticsCharts = ({ token }) => {
       } catch (err) {
         console.error("Analytics error", err);
         setError("Failed to load analytics data");
-        // Mock data for demo
+        // Set empty analytics data instead of mock data
         setAnalytics({
-          patientTrends: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            data: [65, 78, 90, 85, 95, 110]
-          },
-          visitTrends: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            data: [120, 135, 150, 140, 160, 180]
-          },
-          genderDistribution: {
-            labels: ['Male', 'Female', 'Other'],
-            data: [45, 50, 5]
-          },
-          ageDistribution: {
-            labels: ['0-18', '19-30', '31-50', '51-70', '70+'],
-            data: [15, 25, 35, 20, 5]
-          },
-          topConditions: [
-            { condition: 'Hypertension', count: 25 },
-            { condition: 'Diabetes', count: 18 },
-            { condition: 'Respiratory Issues', count: 15 },
-            { condition: 'Cardiovascular', count: 12 },
-            { condition: 'Orthopedic', count: 10 }
-          ]
+          patientTrends: { labels: [], data: [] },
+          visitTrends: { labels: [], data: [] },
+          genderDistribution: { labels: [], data: [] },
+          ageDistribution: { labels: [], data: [] },
+          topConditions: []
         });
       } finally {
         setLoading(false);

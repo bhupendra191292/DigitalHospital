@@ -6,6 +6,7 @@ const authSlice = createSlice({
     token: null,
     doctor: null,
     role: null,
+    tenant: null,
   },
   reducers: {
     setDoctor: (state, action) => {
@@ -17,14 +18,21 @@ const authSlice = createSlice({
     setRole: (state, action) => {
       state.role = action.payload;
     },
+    setTenant: (state, action) => {
+      state.tenant = action.payload;
+    },
+    updateTenant: (state, action) => {
+      state.tenant = { ...state.tenant, ...action.payload };
+    },
     logoutDoctor: (state) => {
       state.token = null;
       state.doctor = null;
       state.role = null;
+      state.tenant = null;
     },
   },
 });
 
 // ✅ Export the actions you use elsewhere
-export const { setDoctor, setToken, setRole, logoutDoctor } = authSlice.actions;
+export const { setDoctor, setToken, setRole, setTenant, updateTenant, logoutDoctor } = authSlice.actions;
 export default authSlice.reducer;

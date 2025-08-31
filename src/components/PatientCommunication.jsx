@@ -23,35 +23,13 @@ const PatientCommunication = ({ token }) => {
       
       setPatients(res.data.data || []);
       
-      // Mock messages data
-      setMessages([
-        {
-          id: 1,
-          patientId: 1,
-          type: 'sms',
-          content: 'Your appointment is confirmed for tomorrow at 10:00 AM',
-          timestamp: '2024-01-19T10:30:00Z',
-          status: 'sent'
-        },
-        {
-          id: 2,
-          patientId: 1,
-          type: 'email',
-          content: 'Please remember to bring your medical reports for the follow-up visit',
-          timestamp: '2024-01-18T15:45:00Z',
-          status: 'delivered'
-        },
-        {
-          id: 3,
-          patientId: 2,
-          type: 'sms',
-          content: 'Your prescription has been sent to the pharmacy',
-          timestamp: '2024-01-17T14:20:00Z',
-          status: 'sent'
-        }
-      ]);
+      // Get real communication data from backend (when implemented)
+      // For now, set empty array until communication API is ready
+      setMessages([]);
     } catch (err) {
       console.error('Failed to load data', err);
+      setPatients([]);
+      setMessages([]);
     } finally {
       setLoading(false);
     }

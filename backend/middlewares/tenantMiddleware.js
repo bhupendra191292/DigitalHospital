@@ -25,7 +25,17 @@ const getTenantFromRequest = async (req) => {
 // Middleware to resolve tenant
 const resolveTenant = async (req, res, next) => {
   try {
-    const tenant = await getTenantFromRequest(req);
+    let tenant = null;
+    
+    // First, try to get tenant from authenticated user if available
+    if (req.user && req.user.tenant) {
+      tenant = await Tenant.findById(req.user.tenant);
+    }
+    
+    // If no tenant from user, try to resolve from host/subdomain
+    if (!tenant) {
+      tenant = await getTenantFromRequest(req);
+    }
     
     if (!tenant) {
       return res.status(404).json({

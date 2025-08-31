@@ -15,6 +15,7 @@ const patientSchema = new mongoose.Schema({
     name: { type: String, default: null },
     phone: { type: String, default: null }
   },
+  medicalNotes: { type: String, default: null },
   language: { type: String, default: null },
   visits: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Visit' }],
   tenant: { type: mongoose.Schema.Types.ObjectId, ref: 'Tenant', required: true },

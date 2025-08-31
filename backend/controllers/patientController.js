@@ -14,42 +14,84 @@ const registerPatient = async (req, res) => {
       allergies = [],
       chronicConditions = [],
       emergencyContact = {},
+      medicalNotes = null,
       language = null
     } = req.body;
   
     try {
+      // Enhanced validation
+      if (!name || !phone || !age || !address) {
+        return res.status(400).json({ 
+          message: 'Missing required fields: name, phone, age, and address are required' 
+        });
+      }
+
+      // Phone number validation
+      const cleanPhone = phone.replace(/\D/g, '');
+      if (cleanPhone.length < 10 || cleanPhone.length > 15) {
+        return res.status(400).json({ 
+          message: 'Invalid phone number. Must be 10-15 digits.' 
+        });
+      }
+
+      // Age validation
+      if (age < 0 || age > 150) {
+        return res.status(400).json({ 
+          message: 'Invalid age. Must be between 0 and 150.' 
+        });
+      }
+
+      // Email validation (if provided)
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ 
+          message: 'Invalid email address format.' 
+        });
+      }
+
+      // Check for existing patient with same phone in same tenant
       const existing = await Patient.findOne({ 
-        phone, 
-        name, 
-        dob,
+        phone: cleanPhone, 
         tenant: req.user?.tenant || '507f1f77bcf86cd799439011'
       });
+      
       if (existing) {
-        return res.status(409).json({ message: 'Same patient already registered.' });
+        return res.status(409).json({ 
+          message: 'A patient with this phone number already exists in this clinic.' 
+        });
       }
+
+      // Create patient with enhanced data
       const patient = await Patient.create({
-        phone,
-        name,
-        age,
-        dob,
+        phone: cleanPhone,
+        name: name.trim(),
+        age: parseInt(age),
+        dob: dob || null,
         gender,
-        address,
-        email,
+        address: address.trim(),
+        email: email ? email.trim() : null,
         bloodGroup,
-        allergies,
-        chronicConditions,
+        allergies: Array.isArray(allergies) ? allergies : [],
+        chronicConditions: Array.isArray(chronicConditions) ? chronicConditions : [],
         emergencyContact: {
-          name: emergencyContact.name || null,
-          phone: emergencyContact.phone || null
+          name: emergencyContact.name ? emergencyContact.name.trim() : null,
+          phone: emergencyContact.phone ? emergencyContact.phone.replace(/\D/g, '') : null
         },
-        language,
-        tenant: req.user?.tenant || '507f1f77bcf86cd799439011', // Default tenant for now
+        medicalNotes: medicalNotes ? medicalNotes.trim() : null,
+        language: language || 'English',
+        tenant: req.user?.tenant || '507f1f77bcf86cd799439011',
         patientId: generateTenantId('PAT', req.user?.tenant || '507f1f77bcf86cd799439011')
       });
   
-      res.status(201).json(patient);
+      res.status(201).json({
+        ...patient.toObject(),
+        message: 'Patient registered successfully'
+      });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      console.error('Patient registration error:', err);
+      res.status(500).json({ 
+        message: 'Failed to register patient',
+        error: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
+      });
     }
   };
   
